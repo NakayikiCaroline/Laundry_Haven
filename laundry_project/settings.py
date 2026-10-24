@@ -36,7 +36,7 @@ DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "laundry-havens.onrender.com",
+    "laundry-haven.onrender.com",
 ]
 
 
