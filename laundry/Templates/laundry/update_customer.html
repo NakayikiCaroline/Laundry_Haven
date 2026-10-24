@@ -1,0 +1,66 @@
+<table class="table table-bordered table-hover">
+
+    <thead class="table-primary">
+
+        <tr>
+
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th width="180">Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for customer in customers %}
+
+        <tr>
+
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.full_name }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.address }}</td>
+
+            <td>
+
+                <a href="{% url 'edit_customer' customer.id %}"
+                   class="btn btn-warning btn-sm">
+
+                    <i class="bi bi-pencil-square"></i>
+                    Edit
+
+                </a>
+
+                <a href="{% url 'delete_customer' customer.id %}"
+                   class="btn btn-danger btn-sm">
+
+                    <i class="bi bi-trash"></i>
+                    Delete
+
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% empty %}
+
+        <tr>
+
+            <td colspan="6" class="text-center">
+                No customers found.
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>

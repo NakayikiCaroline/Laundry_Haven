@@ -1,0 +1,48 @@
+{% extends 'laundry/base.html' %}
+
+{% block title %}Edit Customer{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-warning">
+
+<h4>Edit Customer</h4>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<button class="btn btn-success">
+
+<i class="bi bi-check-circle"></i>
+
+Update Customer
+
+</button>
+
+<a href="{% url 'customer_list' %}"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

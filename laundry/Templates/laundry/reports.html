@@ -1,0 +1,402 @@
+
+{% extends 'laundry/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">
+                <i class="bi bi-bar-chart-line me-2"></i>Business Reports
+            </h2>
+            <p class="text-muted mb-0">
+                Generate reports from your Laundry Haven records.
+            </p>
+        </div>
+
+        <button type="button" onclick="window.print()"
+                class="btn btn-outline-primary">
+            <i class="bi bi-printer me-1"></i> Print / Save PDF
+        </button>
+    </div>
+
+    <!-- Report Filters -->
+    <div class="card border-0 shadow-sm mb-4 report-filters">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-funnel me-2"></i>Report Filters
+            </h5>
+        </div>
+
+        <div class="card-body">
+            {% if report_errors %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Check the report filters:</strong>
+                    <ul class="mb-0">
+                        {% for error in report_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="get" action="{% url 'reports' %}">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-4">
+                        <label for="type" class="form-label fw-semibold">
+                            Report Type
+                        </label>
+                        <select name="type" id="type" class="form-select">
+                            <option value="customers"
+                                {% if report_type == 'customers' %}selected{% endif %}>
+                                Customer Report
+                            </option>
+                            <option value="orders"
+                                {% if report_type == 'orders' %}selected{% endif %}>
+                                Laundry Orders Report
+                            </option>
+                            <option value="payments"
+                                {% if report_type == 'payments' %}selected{% endif %}>
+                                Payments Report
+                            </option>
+                            <option value="revenue"
+                                {% if report_type == 'revenue' %}selected{% endif %}>
+                                Revenue Report
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="start_date" class="form-label fw-semibold">
+                            Start Date
+                        </label>
+                        <input type="date" name="start_date" id="start_date"
+                               class="form-control" value="{{ start_date }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="end_date" class="form-label fw-semibold">
+                            End Date
+                        </label>
+                        <input type="date" name="end_date" id="end_date"
+                               class="form-control" value="{{ end_date }}">
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i> Generate
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Report Heading -->
+    <div class="card border-0 shadow-sm report-content">
+
+        <div class="card-body">
+
+            <div class="text-center mb-4">
+                <h3 class="fw-bold">LAUNDRY HAVEN</h3>
+
+                {% if report_type == 'customers' %}
+                    <h5 class="text-primary">Customer Report</h5>
+                {% elif report_type == 'orders' %}
+                    <h5 class="text-primary">Laundry Orders Report</h5>
+                {% elif report_type == 'revenue' %}
+                    <h5 class="text-primary">Revenue Report</h5>
+                {% else %}
+                    <h5 class="text-primary">Payments Report</h5>
+                {% endif %}
+
+                <p class="text-muted small mb-0">
+                    {% if start_date or end_date %}
+                        Reporting period:
+                        {{ start_date|default:"Beginning" }}
+                        to {{ end_date|default:"Present" }}
+                    {% else %}
+                        All available records
+                    {% endif %}
+                </p>
+                <p class="text-muted small">
+                    Generated on {% now "d M Y, H:i" %}
+                </p>
+            </div>
+
+            <!-- Customer Report -->
+            {% if report_type == 'customers' %}
+
+                <div class="alert alert-light border">
+                    Total registered customers:
+                    <strong>{{ customer_count }}</strong>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for customer in customers %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ customer.full_name }}</td>
+                                <td>{{ customer.phone }}</td>
+                                <td>{{ customer.email|default:"—" }}</td>
+                                <td>{{ customer.address|default:"—" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    No customers found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            <!-- Laundry Orders Report -->
+            {% elif report_type == 'orders' %}
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-light">
+                            <small class="text-muted">Total Orders</small>
+                            <h4 class="fw-bold">{{ order_count }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="p-3 rounded bg-light">
+                            <strong>Orders by Status</strong>
+                            <div class="mt-2">
+                                {% for item in order_statuses %}
+                                    <span class="badge bg-secondary me-2 mb-1">
+                                        {{ item.status }}: {{ item.count }}
+                                    </span>
+                                {% empty %}
+                                    No order records.
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Service</th>
+                                <th>Quantity</th>
+                                <th>Order Date</th>
+                                <th>Pickup Date</th>
+                                <th>Status</th>
+                                <th>Total (UGX)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.customer.full_name }}</td>
+                                <td>{{ order.service.service_name }}</td>
+                                <td>{{ order.quantity }}</td>
+                                <td>{{ order.order_date|date:"d M Y, H:i" }}</td>
+                                <td>{{ order.pickup_date|date:"d M Y"|default:"—" }}</td>
+                                <td>{{ order.get_status_display }}</td>
+                                <td class="text-nowrap">
+                                    {{ order.total_amount|floatformat:2 }}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    No orders found for this period.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            <!-- Payments Report -->
+            {% elif report_type == 'payments' %}
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-light">
+                            <small class="text-muted">Paid Transactions</small>
+                            <h4 class="fw-bold">{{ payment_count }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded bg-light">
+                            <small class="text-muted">Amount Received (UGX)</small>
+                            <h4 class="fw-bold text-success">
+                                {{ total_revenue|floatformat:2 }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Payment #</th>
+                                <th>Customer</th>
+                                <th>Order #</th>
+                                <th>Payment Method</th>
+                                <th>Reference</th>
+                                <th>Date</th>
+                                <th>Amount (UGX)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.id }}</td>
+                                <td>{{ payment.order.customer.full_name }}</td>
+                                <td>{{ payment.order.id }}</td>
+                                <td>{{ payment.get_payment_method_display }}</td>
+                                <td>{{ payment.reference|default:"—" }}</td>
+                                <td>{{ payment.payment_date|date:"d M Y, H:i" }}</td>
+                                <td>{{ payment.amount_paid|floatformat:2 }}</td>
+                                <td>
+                                    {% if payment.paid %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Unpaid</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    No payments found for this period.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            <!-- Revenue Report -->
+            {% elif report_type == 'revenue' %}
+
+                <div class="card bg-success bg-opacity-10 border-0 mb-4">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-1">Total Revenue Received</p>
+                        <h2 class="fw-bold text-success">
+                            UGX {{ total_revenue|floatformat:2 }}
+                        </h2>
+                        <p class="mb-0">
+                            From {{ payment_count }} paid transaction(s)
+                        </p>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mb-3">Revenue by Payment Method</h5>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Payment Method</th>
+                                <th>Number of Payments</th>
+                                <th>Total Received (UGX)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in revenue_by_method %}
+                            <tr>
+                                <td>{{ item.payment_method }}</td>
+                                <td>{{ item.count }}</td>
+                                <td>{{ item.total|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4">
+                                    No paid transactions found for this period.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th colspan="2">Total Revenue</th>
+                                <th>UGX {{ total_revenue|floatformat:2 }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+@media print {
+    body {
+        background: white !important;
+    }
+
+    .report-filters,
+    .btn,
+    nav,
+    aside,
+    .sidebar,
+    header,
+    footer {
+        display: none !important;
+    }
+
+    .report-content,
+    .card-body {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .container-fluid {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 10pt;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr {
+        break-inside: avoid;
+    }
+
+    h3, h5 {
+        color: black !important;
+    }
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'laundry/base.html' %}
+
+{% block title %}Edit Laundry Order{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-pencil-square"></i>
+                Edit Laundry Order
+            </h2>
+            <p class="text-muted mb-0">
+                Update order details
+            </p>
+        </div>
+
+        <a href="{% url 'order_list' %}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i>
+            Back to Orders
+        </a>
+
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square"></i>
+                        Order Information
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-person-fill text-primary"></i>
+                                    Customer
+                                </label>
+                                {{ form.customer }}
+                                {% if form.customer.errors %}
+                                    <div class="text-danger small">{{ form.customer.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-droplet-fill text-primary"></i>
+                                    Laundry Service
+                                </label>
+                                {{ form.service }}
+                                {% if form.service.errors %}
+                                    <div class="text-danger small">{{ form.service.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-123 text-primary"></i>
+                                    Quantity
+                                </label>
+                                {{ form.quantity }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-cash-stack text-success"></i>
+                                    Total Amount (UGX)
+                                </label>
+                                {{ form.total_amount }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-hourglass-split text-primary"></i>
+                                    Order Status
+                                </label>
+                                {{ form.status }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-calendar-event text-primary"></i>
+                                    Pickup Date
+                                </label>
+                                {{ form.pickup_date }}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'order_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i>
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

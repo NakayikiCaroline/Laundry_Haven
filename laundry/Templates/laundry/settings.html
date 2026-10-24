@@ -1,0 +1,165 @@
+```html
+{% extends 'laundry/base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Business Information</h2>
+            <p class="text-muted mb-0">
+                Manage the details displayed on your laundry receipts.
+            </p>
+        </div>
+        <i class="bi bi-building fs-1 text-primary"></i>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+                {{ message }}
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">Edit Business Details</h5>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.business_name.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Business Name
+                            </label>
+                            {{ form.business_name }}
+                            {% for error in form.business_name.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.phone.id_for_label }}"
+                                       class="form-label fw-semibold">
+                                    Phone Number
+                                </label>
+                                {{ form.phone }}
+                                {% for error in form.phone.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}"
+                                       class="form-label fw-semibold">
+                                    Email Address
+                                </label>
+                                {{ form.email }}
+                                {% for error in form.email.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.address.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Physical Address
+                            </label>
+                            {{ form.address }}
+                            {% for error in form.address.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.receipt_footer.id_for_label }}"
+                                   class="form-label fw-semibold">
+                                Receipt Footer Message
+                            </label>
+                            {{ form.receipt_footer }}
+                            {% for error in form.receipt_footer.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                            <div class="form-text">
+                                This message will appear at the bottom of receipts.
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i>
+                                Save Settings
+                            </button>
+
+                            <a href="{% url 'settings' %}"
+                               class="btn btn-outline-secondary">
+                                Reset Changes
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light py-3">
+                    <h5 class="mb-0">Receipt Preview</h5>
+                </div>
+
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-receipt-cutoff fs-1 text-primary"></i>
+
+                    <h4 class="fw-bold mt-3">
+                        {{ business.business_name }}
+                    </h4>
+
+                    <p class="mb-1">
+                        {{ business.phone|default:"Business phone not set" }}
+                    </p>
+                    <p class="mb-1">
+                        {{ business.email|default:"Business email not set" }}
+                    </p>
+                    <p class="text-muted">
+                        {{ business.address|default:"Business address not set" }}
+                    </p>
+
+                    <hr>
+
+                    <p class="small text-muted mb-0">
+                        {{ business.receipt_footer }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-3">
+                <i class="bi bi-info-circle me-1"></i>
+                These details will be used on your payment receipts.
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+```

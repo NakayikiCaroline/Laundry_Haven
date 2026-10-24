@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Laundry Haven Management System{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+
+        body{
+            background:#f5f6fa;
+            margin:0;
+        }
+
+        /* Header */
+
+        header{
+            background:#d9f4ff;
+            border-bottom:4px solid #0d6efd;
+        }
+
+        header h1{
+            font-size:42px;
+            font-weight:bold;
+            color:#0d6efd;
+            letter-spacing:2px;
+        }
+
+        header p{
+            font-size:20px;
+            color:#555;
+        }
+
+        /* Sidebar */
+
+        .sidebar{
+            min-height:100vh;
+            background:#0d6efd;
+        }
+
+        .sidebar .nav-link{
+            color:white;
+            padding:12px;
+            border-radius:8px;
+            margin-bottom:8px;
+            font-size:17px;
+        }
+
+        .sidebar .nav-link:hover{
+            background:white;
+            color:#0d6efd;
+        }
+
+        .sidebar .logout-button{
+            display:block;
+            width:100%;
+            padding:12px;
+            margin-bottom:8px;
+            border:0;
+            border-radius:8px;
+            background:transparent;
+            color:white;
+            font:inherit;
+            text-align:left;
+            cursor:pointer;
+        }
+
+        .sidebar .logout-button:hover,
+        .sidebar .logout-button:focus-visible{
+            background:white;
+            color:#0d6efd;
+        }
+
+        /* Main Content */
+
+        .content{
+            padding:30px;
+        }
+
+        /* Cards */
+
+        .card{
+            border:none;
+            border-radius:15px;
+            box-shadow:0 3px 10px rgba(0,0,0,.15);
+        }
+
+        footer{
+            text-align:center;
+            color:gray;
+            margin-top:40px;
+            padding:15px;
+        }
+
+    </style>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="py-4">
+
+    <div class="container text-center">
+
+        <img src="{% static 'images/logo.jpg' %}"
+             alt="Laundry Haven Logo"
+             class="rounded-circle border border-primary border-3 shadow mb-3"
+             style="width:120px;height:120px;object-fit:cover;">
+
+        <h1>
+            LAUNDRY HAVEN MANAGEMENT SYSTEM
+        </h1>
+
+        <p>
+            Fast • Reliable • Professional Laundry Services
+        </p>
+
+    </div>
+
+</header>
+
+<!-- ================= MAIN PAGE ================= -->
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Sidebar -->
+
+        <div class="col-md-2 sidebar p-3">
+
+            <h4 class="text-white text-center mb-4">
+                MENU
+            </h4>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{% url 'home' %}" class="nav-link">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                   <a href="{% url 'customer_list' %}" class="nav-link">
+                         <i class="bi bi-people-fill"></i>
+                            Customers
+                   </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'order_list'%}" 
+                     class="nav-link">
+                        <i class="bi bi-basket2-me-2"></i>
+                        Laundry Orders
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'service_list' %}" class="nav-link">
+                        <i class="bi bi-droplet me-2"></i>
+                        Services
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'payment_list' %}" class="nav-link">
+                        <i class="bi bi-cash-stack"></i>
+                        Payments
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'reports' %}" class="nav-link">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        Reports
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'settings' %}" class="nav-link">
+                        <i class="bi bi-gear-fill"></i>
+                        Settings
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <form method="post"
+                          action="{% url 'logout' %}"
+                          class="m-0">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="logout-button">
+                            <i class="bi bi-box-arrow-right me-1"
+                               aria-hidden="true"></i>
+                            Logout
+                        </button>
+                    </form>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- Main Content -->
+
+        <div class="col-md-10 content">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                         role="alert">
+                        {{ message }}
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+
+            <footer>
+                © 2026 Laundry Haven Management System. All Rights Reserved.
+            </footer>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+</html>

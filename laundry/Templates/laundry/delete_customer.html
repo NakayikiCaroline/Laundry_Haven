@@ -1,0 +1,55 @@
+{% extends 'laundry/base.html' %}
+
+{% block title %}Delete Customer{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+
+<h4>Delete Customer</h4>
+
+</div>
+
+<div class="card-body">
+
+<h5>
+
+Are you sure you want to delete
+
+<strong>{{ customer.full_name }}</strong>?
+
+</h5>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<button class="btn btn-danger">
+
+<i class="bi bi-trash"></i>
+
+Delete
+
+</button>
+
+<a href="{% url 'customer_list' %}"
+
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

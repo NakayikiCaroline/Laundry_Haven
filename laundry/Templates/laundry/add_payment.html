@@ -1,0 +1,156 @@
+{% extends 'laundry/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8 col-md-10">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white py-3">
+
+                    <h4 class="mb-0">
+                        <i class="bi bi-wallet2 me-2"></i>
+                        Record Payment
+                    </h4>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Please correct the errors below.
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Laundry Order
+                            </label>
+
+                            {{ form.order }}
+
+                            {% if form.order.errors %}
+                                <div class="text-danger small">
+                                    {{ form.order.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Amount Paid
+                            </label>
+
+                            {{ form.amount_paid }}
+
+                            {% if form.amount_paid.errors %}
+                                <div class="text-danger small">
+                                    {{ form.amount_paid.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Payment Method
+                            </label>
+
+                            {{ form.payment_method }}
+
+                            {% if form.payment_method.errors %}
+                                <div class="text-danger small">
+                                    {{ form.payment_method.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Payment Date
+                            </label>
+
+                            {{ form.payment_date }}
+
+                            {% if form.payment_date.errors %}
+                                <div class="text-danger small">
+                                    {{ form.payment_date.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Transaction Reference
+                            </label>
+
+                            {{ form.reference }}
+
+                            <div class="form-text">
+                                Optional transaction ID or reference number.
+                            </div>
+
+                            {% if form.reference.errors %}
+                                <div class="text-danger small">
+                                    {{ form.reference.errors }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'payment_list' %}"
+                               class="btn btn-secondary">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Cancel
+
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-check-circle me-1"></i>
+                                Save Payment
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
