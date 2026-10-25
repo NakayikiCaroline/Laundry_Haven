@@ -33,14 +33,7 @@ SECRET_KEY = 'django-insecure-@*6x(zxrn=w#=%i^a6(hcr6lrx8y70w8*ag!ea7u%$%a0w+spn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "laundry-haven.onrender.com",
-]
-
-
-
+ALLOWED_HOSTS = ['://pythonanywhere.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
